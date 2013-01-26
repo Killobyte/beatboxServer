@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import org.json.JSONException;
@@ -11,6 +12,7 @@ import org.json.JSONObject;
 
 import com.beatbox.lib.Library;
 import com.beatbox.lib.song.Song;
+import com.beatbox.server.mediaPlayer.BBMediaPlayer;
 import com.beatbox.server.ui.ServerUI;
 
 public class ServerController {
@@ -19,12 +21,13 @@ public class ServerController {
 	private ServerUI ui;
 	private String musicPath;
 	private JSONObject config;
-
-	// private ArrayList<Song> playlist;
+	boolean isPlaying = false;
+	private ArrayList<Song> playlist;
+	BBMediaPlayer player;
 
 	public ServerController() {
 
-		// playlist = new ArrayList<Song>();
+		playlist = new ArrayList<Song>();
 
 		readConfigFile();
 
@@ -82,17 +85,46 @@ public class ServerController {
 	}
 
 	public void addSongToPlaylist(Song song) {
-		// playlist.add(song);
+		playlist.add(song);
 		ui.addSongToPlaylist(song);
 	}
 
 	public void removeSongFromPlaylistAt(int index) {
-		// playlist.remove(index);
+		playlist.remove(index);
 		ui.removeSongFromPlaylist(index);
+	}
+
+	public void popPlaylist() {
+		removeSongFromPlaylistAt(0);
 	}
 
 	public ServerUI getUI() {
 		return ui;
+	}
+
+	public void setPlaying(boolean in) {
+		isPlaying = in;
+	}
+
+	public boolean isPlaying() {
+		return isPlaying;
+	}
+
+	public Song getNextSong() {
+		if (playlist.size() == 0) {
+			return null;
+		} else {
+			return playlist.get(0);
+		}
+	}
+
+	public void startPlaying() {
+		player = new BBMediaPlayer(this);
+		player.start();
+	}
+
+	public void stopPlaying() {
+		player.stopMedia();
 	}
 
 	public static void main(String[] argv) {

@@ -22,21 +22,18 @@ import com.beatbox.server.ServerController;
 public class ServerUI {
 
 	ServerController controller;
-
 	JFrame mainFrame;
-
 	JTree libraryBrowser;
-
 	PlaylistModel playlistModel;
-
-	JList playlist;
+	JList<Song> playlist;
+	JButton playPauseButton;
 
 	public ServerUI(ServerController controller) {
 		this.controller = controller;
 
 		// Create control buttons
-		JButton playPauseButton = new JButton("Play");
-
+		playPauseButton = new JButton("Play");
+		playPauseButton.addActionListener(new PlayButtonListener(controller));
 		JButton skipButton = new JButton("Skip");
 
 		JPanel controls = new JPanel();
@@ -80,9 +77,8 @@ public class ServerUI {
 
 		// Create playlist window
 		playlistModel = new PlaylistModel();
-		playlist = new JList(playlistModel);
+		playlist = new JList<Song>(playlistModel);
 		playlist.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-		playlist.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		playlist.setVisibleRowCount(-1);
 
 		JScrollPane playlistScroller = new JScrollPane(playlist);
@@ -134,7 +130,11 @@ public class ServerUI {
 		playlistModel.removeSong(index);
 	}
 
-	public JList getPlaylist() {
+	public JList<Song> getPlaylist() {
 		return playlist;
+	}
+
+	public void setPlayButtonText(String text) {
+		playPauseButton.setText(text);
 	}
 }

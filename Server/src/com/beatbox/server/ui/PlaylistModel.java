@@ -6,14 +6,14 @@ import javax.swing.AbstractListModel;
 
 import com.beatbox.lib.song.Song;
 
-public class PlaylistModel extends AbstractListModel {
+public class PlaylistModel extends AbstractListModel<Song> {
 
 	private static final long serialVersionUID = 4225730778450953578L;
 
 	ArrayList<Song> playlist = new ArrayList<Song>();
 
 	@Override
-	public Object getElementAt(int i) {
+	public Song getElementAt(int i) {
 		return playlist.get(i);
 	}
 

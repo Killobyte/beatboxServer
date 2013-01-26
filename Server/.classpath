@@ -3,6 +3,8 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Library"/>
-	<classpathentry kind="lib" path="/Library/lib/json-org.jar"/>
+	<classpathentry kind="lib" path="lib/json-org.jar"/>
+	<classpathentry kind="lib" path="lib/mp3plugin.jar"/>
+	<classpathentry kind="lib" path="lib/jmf.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

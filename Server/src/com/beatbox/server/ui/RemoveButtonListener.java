@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JList;
 
+import com.beatbox.lib.song.Song;
 import com.beatbox.server.ServerController;
 
 public class RemoveButtonListener implements ActionListener {
@@ -17,7 +18,7 @@ public class RemoveButtonListener implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		JList playlist = controller.getUI().getPlaylist();
+		JList<Song> playlist = controller.getUI().getPlaylist();
 		int[] indicies = playlist.getSelectedIndices();
 		indicies = reverse(indicies);
 		for (int index : indicies) {
