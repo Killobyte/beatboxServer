@@ -16,12 +16,15 @@ import com.beatbox.server.ui.ServerUI;
 public class ServerController {
 	private String configPath = "config.json";
 	private Library library;
-	@SuppressWarnings("unused")
 	private ServerUI ui;
 	private String musicPath;
 	private JSONObject config;
 
+	// private ArrayList<Song> playlist;
+
 	public ServerController() {
+
+		// playlist = new ArrayList<Song>();
 
 		readConfigFile();
 
@@ -29,12 +32,6 @@ public class ServerController {
 			library = new Library();
 
 			library.buildFromFilepath(new File(musicPath));
-
-			for (String artist : library.getArtists()) {
-				for (Song song : library.getSongs(artist)) {
-					System.out.println(artist + " - " + song.getTitle());
-				}
-			}
 		}
 
 		ui = new ServerUI(this);
@@ -82,6 +79,20 @@ public class ServerController {
 			e.printStackTrace();
 		}
 
+	}
+
+	public void addSongToPlaylist(Song song) {
+		// playlist.add(song);
+		ui.addSongToPlaylist(song);
+	}
+
+	public void removeSongFromPlaylistAt(int index) {
+		// playlist.remove(index);
+		ui.removeSongFromPlaylist(index);
+	}
+
+	public ServerUI getUI() {
+		return ui;
 	}
 
 	public static void main(String[] argv) {
