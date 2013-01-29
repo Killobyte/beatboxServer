@@ -1,15 +1,10 @@
 package com.beatbox.server.mediaPlayer;
 
-import javax.media.Player;
-import javax.media.Time;
-
 import com.beatbox.lib.song.Song;
 import com.beatbox.server.ServerController;
 
 public class BBMediaPlayer extends Thread {
 	ServerController controller;
-	Player player;
-	Time resumeTime;
 	boolean paused;
 	Song currentSong;
 

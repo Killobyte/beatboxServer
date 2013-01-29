@@ -4,6 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -43,6 +48,15 @@ public class ServerUI {
 		controls.add(createButtonSpacer());
 		controls.add(skipButton);
 		controls.add(Box.createHorizontalGlue());
+
+		// Need this to set up environment to play MP3s
+		final JFXPanel fxPanel = new JFXPanel();
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				initFX(fxPanel);
+			}
+		});
 
 		// Create library browser
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Library");
@@ -97,6 +111,7 @@ public class ServerUI {
 		mainFrame.setTitle("BeatBox Home Jukebox");
 		mainFrame.add(controls, BorderLayout.PAGE_START);
 		mainFrame.add(browserPanel, BorderLayout.CENTER);
+		mainFrame.add(fxPanel, BorderLayout.PAGE_END);
 
 		mainFrame.pack();
 		mainFrame.setLocationRelativeTo(null);
@@ -104,6 +119,13 @@ public class ServerUI {
 		mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		mainFrame.setVisible(true);
+	}
+
+	private static void initFX(JFXPanel fxPanel) {
+		// This method is invoked on JavaFX thread
+		Group root = new Group();
+		Scene scene = new Scene(root);
+		fxPanel.setScene(scene);
 	}
 
 	private Component createSpacer(int size) {
