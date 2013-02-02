@@ -25,10 +25,12 @@ public class ServerController {
 	boolean isPlaying = false;
 	private ArrayList<Song> playlist;
 	BBMediaPlayer player;
+	private int playingIndex;
 
 	public ServerController() {
 
 		playlist = new ArrayList<Song>();
+		playingIndex = 0;
 
 		if (readConfigFile()) {
 			buildLibrary();
@@ -113,18 +115,14 @@ public class ServerController {
 
 	}
 
-	public void addSongToPlaylist(Song song) {
+	public synchronized void addSongToPlaylist(Song song) {
 		playlist.add(song);
 		ui.addSongToPlaylist(song);
 	}
 
-	public void removeSongFromPlaylistAt(int index) {
+	public synchronized void removeSongFromPlaylistAt(int index) {
 		playlist.remove(index);
 		ui.removeSongFromPlaylist(index);
-	}
-
-	public void popPlaylist() {
-		removeSongFromPlaylistAt(0);
 	}
 
 	public ServerUI getUI() {
@@ -139,11 +137,11 @@ public class ServerController {
 		return isPlaying;
 	}
 
-	public Song getNextSong() {
-		if (playlist.size() == 0) {
+	public synchronized Song getNextSong() {
+		if (playlist.size() == 0 || playingIndex >= playlist.size()) {
 			return null;
 		} else {
-			return playlist.get(0);
+			return playlist.get(playingIndex++);
 		}
 	}
 

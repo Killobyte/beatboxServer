@@ -18,8 +18,15 @@ public class BBMediaPlayer extends Thread {
 
 	public void playNextSong() {
 		currentSong = controller.getNextSong();
-		currentSong.play();
-		controller.setPlaying(true);
+		if (currentSong != null) {
+			currentSong.play(new Runnable() {
+				@Override
+				public void run() {
+					playNextSong();
+				}
+			});
+			controller.setPlaying(true);
+		}
 	}
 
 	public void stopMedia() {

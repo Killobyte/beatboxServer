@@ -39,14 +39,15 @@ public class ServerUI {
 		// Create control buttons
 		playPauseButton = new JButton("Play");
 		playPauseButton.addActionListener(new PlayButtonListener(controller));
-		JButton skipButton = new JButton("Skip");
+
+		// JButton skipButton = new JButton("Skip");
 
 		JPanel controls = new JPanel();
 		controls.setLayout(new BoxLayout(controls, BoxLayout.LINE_AXIS));
 		controls.add(Box.createHorizontalGlue());
 		controls.add(playPauseButton);
-		controls.add(createButtonSpacer());
-		controls.add(skipButton);
+		// controls.add(createButtonSpacer());
+		// controls.add(skipButton);
 		controls.add(Box.createHorizontalGlue());
 
 		// Need this to set up environment to play MP3s
