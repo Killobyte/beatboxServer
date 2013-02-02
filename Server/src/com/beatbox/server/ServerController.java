@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import com.beatbox.lib.Library;
 import com.beatbox.lib.song.Song;
 import com.beatbox.server.mediaPlayer.BBMediaPlayer;
+import com.beatbox.server.music.ui.pathPrompt.MusicPathPrompt;
 import com.beatbox.server.ui.ServerUI;
 
 public class ServerController {
@@ -29,18 +30,17 @@ public class ServerController {
 
 		playlist = new ArrayList<Song>();
 
-		readConfigFile();
-
-		if (musicPath != null) {
-			library = new Library();
-
-			library.buildFromFilepath(new File(musicPath));
+		if (readConfigFile()) {
+			buildLibrary();
+			startUI();
+		} else {
+			@SuppressWarnings("unused")
+			MusicPathPrompt pathPrompt = new MusicPathPrompt(this);
 		}
 
-		ui = new ServerUI(this);
 	}
 
-	private void readConfigFile() {
+	private boolean readConfigFile() {
 		String jsonString = null;
 		config = null;
 		try {
@@ -49,7 +49,6 @@ public class ServerController {
 			config = new JSONObject(jsonString);
 		} catch (FileNotFoundException e) {
 			System.err.println("Error - config file not found");
-			e.printStackTrace();
 		} catch (JSONException e) {
 			System.err.println("Error reading config file");
 			e.printStackTrace();
@@ -62,8 +61,38 @@ public class ServerController {
 				System.err
 						.println("Error - musicPath missing from config file");
 				e.printStackTrace();
+				return false;
 			}
+			return true;
+		} else {
+			// Prompt for music path
+			return false;
 		}
+	}
+
+	public void buildLibrary() {
+		if (musicPath != null) {
+			library = new Library();
+
+			library.buildFromFilepath(new File(musicPath));
+		}
+	}
+
+	public void startUI() {
+		ui = new ServerUI(this);
+	}
+
+	public void setFilepathFromPrompt(String path) {
+		musicPath = path;
+		config = new JSONObject();
+		try {
+			config.put("musicPath", musicPath);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		buildLibrary();
+		startUI();
 	}
 
 	public Library getLibrary() {

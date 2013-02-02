@@ -116,7 +116,7 @@ public class ServerUI {
 		mainFrame.pack();
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.addWindowListener(new BeatBoxWindowListener(controller));
-		mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		mainFrame.setVisible(true);
 	}

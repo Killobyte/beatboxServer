@@ -13,7 +13,6 @@ public class BeatBoxWindowListener extends WindowAdapter {
 	}
 
 	public void windowClosing(WindowEvent e) {
-		System.out.println("Window closing");
 		controller.saveConfig();
 	}
 }
