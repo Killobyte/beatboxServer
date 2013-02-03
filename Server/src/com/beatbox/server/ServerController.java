@@ -24,8 +24,9 @@ public class ServerController {
 	private JSONObject config;
 	boolean isPlaying = false;
 	private ArrayList<Song> playlist;
-	BBMediaPlayer player;
+	private BBMediaPlayer player;
 	private int playingIndex;
+	private ConnectionHandler connHandler;
 
 	public ServerController() {
 
@@ -34,7 +35,7 @@ public class ServerController {
 
 		if (readConfigFile()) {
 			buildLibrary();
-			startUI();
+			startServerAndUI();
 		} else {
 			@SuppressWarnings("unused")
 			MusicPathPrompt pathPrompt = new MusicPathPrompt(this);
@@ -80,7 +81,9 @@ public class ServerController {
 		}
 	}
 
-	public void startUI() {
+	public void startServerAndUI() {
+		connHandler = new ConnectionHandler(this);
+		connHandler.start();
 		ui = new ServerUI(this);
 	}
 
@@ -94,7 +97,7 @@ public class ServerController {
 			e.printStackTrace();
 		}
 		buildLibrary();
-		startUI();
+		startServerAndUI();
 	}
 
 	public Library getLibrary() {
@@ -118,6 +121,12 @@ public class ServerController {
 	public synchronized void addSongToPlaylist(Song song) {
 		playlist.add(song);
 		ui.addSongToPlaylist(song);
+	}
+
+	public synchronized void addSongToPlaylist(String artist, String title) {
+		Song toAdd = library.getSong(artist, title);
+		playlist.add(toAdd);
+		ui.addSongToPlaylist(toAdd);
 	}
 
 	public synchronized void removeSongFromPlaylistAt(int index) {
