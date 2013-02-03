@@ -22,16 +22,19 @@ public class ServerController {
 	private ServerUI ui;
 	private String musicPath;
 	private JSONObject config;
-	boolean isPlaying = false;
+	boolean mediaStarted;
 	private ArrayList<Song> playlist;
 	private BBMediaPlayer player;
 	private volatile int playingIndex;
 	private ConnectionHandler connHandler;
+	private boolean isPaused;
 
 	public ServerController() {
 
 		playlist = new ArrayList<Song>();
 		playingIndex = -1;
+		mediaStarted = false;
+		isPaused = false;
 
 		if (readConfigFile()) {
 			buildLibrary();
@@ -153,15 +156,19 @@ public class ServerController {
 		return ui;
 	}
 
-	public void setPlaying(boolean in) {
-		isPlaying = in;
-		if (isPlaying) {
+	public void setMediaStarted(boolean in) {
+		mediaStarted = in;
+		if (mediaStarted) {
 			ui.refreshPlaylist();
 		}
 	}
 
-	public boolean isPlaying() {
-		return isPlaying;
+	public boolean isMediaStarted() {
+		return mediaStarted;
+	}
+
+	public boolean isPaused() {
+		return isPaused;
 	}
 
 	public synchronized int getCurrentPlayingIndex() {
@@ -190,6 +197,22 @@ public class ServerController {
 		player.stopMedia();
 		// So when the user clicks "start" the same song starts over
 		playingIndex--;
+	}
+
+	public void pausePlayback() {
+		if (!isPaused) {
+			player.pauseOrResumeMedia();
+			isPaused = true;
+		}
+	}
+
+	public void resumePlayback() {
+		if (isPaused) {
+			player.pauseOrResumeMedia();
+			isPaused = false;
+		} else if (hasSongs()) {
+			startPlaying();
+		}
 	}
 
 	public synchronized boolean hasSongs() {

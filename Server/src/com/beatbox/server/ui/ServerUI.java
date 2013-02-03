@@ -43,28 +43,15 @@ public class ServerUI {
 		playPauseButton = new JButton("Play");
 		playPauseButton.addActionListener(new PlayButtonListener(controller));
 
-		// Create lables for IP and Port
-		JLabel ipLabel = null;
-		try {
-			ipLabel = new JLabel("IP: "
-					+ InetAddress.getLocalHost().getHostAddress());
-		} catch (UnknownHostException e) {
-			System.err.println("Error get IP addr");
-			e.printStackTrace();
-		}
-		JLabel portLabel = new JLabel("Port: "
-				+ Integer.toString(controller.getServerPort()));
-
-		/*
-		 * JPanel networkPanel = new JPanel(); networkPanel .setLayout(new
-		 * BoxLayout(networkPanel, BoxLayout.PAGE_AXIS));
-		 * networkPanel.add(ipLabel); networkPanel.add(portLabel);
-		 */
+		JButton stopButton = new JButton("Stop");
+		stopButton.addActionListener(new StopButtonListener(controller));
 
 		JPanel header = new JPanel();
 		header.setLayout(new BoxLayout(header, BoxLayout.LINE_AXIS));
 		header.add(Box.createHorizontalGlue());
 		header.add(playPauseButton);
+		header.add(createButtonSpacer());
+		header.add(stopButton);
 		header.add(Box.createHorizontalGlue());
 		// header.add(networkPanel);
 
@@ -129,7 +116,17 @@ public class ServerUI {
 		browserPanel.add(createPanelSpacer());
 		browserPanel.add(playlistScroller);
 
-		// Footer
+		// Create lables for IP and Port
+		JLabel ipLabel = null;
+		try {
+			ipLabel = new JLabel("IP: "
+					+ InetAddress.getLocalHost().getHostAddress());
+		} catch (UnknownHostException e) {
+			System.err.println("Error get IP addr");
+			e.printStackTrace();
+		}
+		JLabel portLabel = new JLabel("Port: "
+				+ Integer.toString(controller.getServerPort()));
 		JPanel networkPanel = new JPanel();
 		networkPanel
 				.setLayout(new BoxLayout(networkPanel, BoxLayout.LINE_AXIS));

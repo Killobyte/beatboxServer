@@ -25,16 +25,16 @@ public class BBMediaPlayer extends Thread {
 					playNextSong();
 				}
 			});
-			controller.setPlaying(true);
+			controller.setMediaStarted(true);
 		}
 	}
 
 	public void stopMedia() {
 		currentSong.stop();
-		controller.setPlaying(false);
+		controller.setMediaStarted(false);
 	}
 
-	public void pauseAndResumeMedia() {
+	public void pauseOrResumeMedia() {
 		currentSong.pauseOrResume();
 	}
 }

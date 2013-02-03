@@ -15,12 +15,17 @@ public class PlayButtonListener implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		if (controller.isPlaying()) {
-			controller.stopPlaying();
-			controller.getUI().setPlayButtonText("Play");
-		} else if (controller.hasSongs()) {
-			controller.startPlaying();
-			controller.getUI().setPlayButtonText("Stop");
+		if (controller.isPaused()) {
+			controller.resumePlayback();
+			controller.getUI().setPlayButtonText("Pause");
+		} else {
+			if (controller.isMediaStarted()) {
+				controller.pausePlayback();
+				controller.getUI().setPlayButtonText("Play");
+			} else if (controller.hasSongs()) {
+				controller.startPlaying();
+				controller.getUI().setPlayButtonText("Pause");
+			}
 		}
 	}
 }
