@@ -194,7 +194,9 @@ public class ServerController {
 	}
 
 	public void stopPlaying() {
-		player.stopMedia();
+		if (player != null) {
+			player.stopMedia();
+		}
 		// So when the user clicks "start" the same song starts over
 		playingIndex--;
 	}
