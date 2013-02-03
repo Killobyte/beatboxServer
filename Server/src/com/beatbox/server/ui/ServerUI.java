@@ -71,9 +71,9 @@ public class ServerUI {
 			}
 			root.add(artistNode);
 		}
-
 		libraryBrowser = new JTree(root);
 		JScrollPane libraryScrollView = new JScrollPane(libraryBrowser);
+		libraryScrollView.setPreferredSize(new Dimension(300, 450));
 
 		// Create panel for add/remove buttons
 		JButton addButton = new JButton(">");
@@ -97,7 +97,7 @@ public class ServerUI {
 		playlist.setVisibleRowCount(-1);
 
 		JScrollPane playlistScroller = new JScrollPane(playlist);
-		playlistScroller.setPreferredSize(new Dimension(250, 80));
+		playlistScroller.setPreferredSize(new Dimension(300, 450));
 
 		JPanel browserPanel = new JPanel();
 		browserPanel
