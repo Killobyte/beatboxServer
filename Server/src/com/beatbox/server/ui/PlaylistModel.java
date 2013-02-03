@@ -22,6 +22,10 @@ public class PlaylistModel extends AbstractListModel<Song> {
 		return playlist.size();
 	}
 
+	public void refresh() {
+		fireContentsChanged(this, 0, playlist.size() - 1);
+	}
+
 	public void addSong(Song song) {
 		playlist.add(song);
 		fireIntervalAdded(this, playlist.size() - 1, playlist.size() - 1);

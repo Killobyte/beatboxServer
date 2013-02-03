@@ -40,14 +40,10 @@ public class ServerUI {
 		playPauseButton = new JButton("Play");
 		playPauseButton.addActionListener(new PlayButtonListener(controller));
 
-		// JButton skipButton = new JButton("Skip");
-
 		JPanel controls = new JPanel();
 		controls.setLayout(new BoxLayout(controls, BoxLayout.LINE_AXIS));
 		controls.add(Box.createHorizontalGlue());
 		controls.add(playPauseButton);
-		// controls.add(createButtonSpacer());
-		// controls.add(skipButton);
 		controls.add(Box.createHorizontalGlue());
 
 		// Need this to set up environment to play MP3s
@@ -95,6 +91,9 @@ public class ServerUI {
 		playlist = new JList<Song>(playlistModel);
 		playlist.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		playlist.setVisibleRowCount(-1);
+		playlist.setCellRenderer(new PlaylistCellRenderer(controller));
+		playlist.addMouseListener(new PlaylistClickListener(playlist,
+				controller));
 
 		JScrollPane playlistScroller = new JScrollPane(playlist);
 		playlistScroller.setPreferredSize(new Dimension(300, 450));
@@ -159,5 +158,9 @@ public class ServerUI {
 
 	public void setPlayButtonText(String text) {
 		playPauseButton.setText(text);
+	}
+
+	public void refreshPlaylist() {
+		playlistModel.refresh();
 	}
 }

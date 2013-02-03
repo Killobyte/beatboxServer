@@ -30,7 +30,7 @@ public class ServerController {
 	public ServerController() {
 
 		playlist = new ArrayList<Song>();
-		playingIndex = 0;
+		playingIndex = -1;
 
 		if (readConfigFile()) {
 			buildLibrary();
@@ -123,6 +123,16 @@ public class ServerController {
 	public synchronized void removeSongFromPlaylistAt(int index) {
 		playlist.remove(index);
 		ui.removeSongFromPlaylist(index);
+		if (index == playingIndex) {
+			stopPlaying();
+			// Without this we would skip the song after the one currently
+			// playing
+			playingIndex--;
+			startPlaying();
+		} else if (index < playingIndex) {
+			// Keep proper highlighting of current song
+			playingIndex--;
+		}
 	}
 
 	public ServerUI getUI() {
@@ -131,17 +141,28 @@ public class ServerController {
 
 	public void setPlaying(boolean in) {
 		isPlaying = in;
+		if (isPlaying) {
+			ui.refreshPlaylist();
+		}
 	}
 
 	public boolean isPlaying() {
 		return isPlaying;
 	}
 
+	public synchronized int getCurrentPlayingIndex() {
+		return playingIndex;
+	}
+
+	public synchronized void setPlayingIndex(int index) {
+		playingIndex = index;
+	}
+
 	public synchronized Song getNextSong() {
-		if (playlist.size() == 0 || playingIndex >= playlist.size()) {
-			return null;
+		if (playlist.size() != 0 && playingIndex < playlist.size()) {
+			return playlist.get(++playingIndex);
 		} else {
-			return playlist.get(playingIndex++);
+			return null;
 		}
 	}
 
@@ -152,6 +173,8 @@ public class ServerController {
 
 	public void stopPlaying() {
 		player.stopMedia();
+		// So when the user clicks "start" the same song starts over
+		playingIndex--;
 	}
 
 	public static void main(String[] argv) {
