@@ -23,33 +23,44 @@ public class RequestHandler extends Thread {
 			inFromClient = new BufferedReader(new InputStreamReader(
 					socket.getInputStream()));
 			outToClient = new DataOutputStream(socket.getOutputStream());
-			String input = inFromClient.readLine();
-			BBRequest request = new BBRequest(input);
-			if (request.getIsErrored()) {
-				outToClient.writeBytes("Error - malformed request");
-				socket.close();
-				return;
+			boolean quit = false;
+			while (!quit) {
+				String input = inFromClient.readLine();
+				BBRequest request = new BBRequest(input);
+				if (request != null) {
+					if (request.getIsErrored()) {
+						outToClient.writeBytes("Error - malformed request");
+					} else {
+						switch (request.getCommand()) {
+						case GETLIBRARY:
+							outToClient.writeBytes(controller.getLibrary()
+									.toJSONObject().toString());
+							break;
+						case ADDSONG:
+							if (addSong(request)) {
+								outToClient.writeBytes("Success");
+							} else {
+								outToClient.writeBytes("Failure");
+							}
+							break;
+						case QUIT:
+							quit = true;
+							break;
+						default:
+							outToClient.writeBytes("Error - invalid command");
+						}
+					}
+				}
 			}
-			switch (request.getCommand()) {
-			case GETLIBRARY:
-				outToClient.writeBytes(controller.getLibrary().toJSONObject()
-						.toString());
-				break;
-			case ADDSONG:
-				addSong(request);
-				break;
-			default:
-				outToClient.writeBytes("Error - invalid command");
-				socket.close();
-				return;
-			}
+			socket.close();
 		} catch (IOException e) {
 			System.err.println("Error talking to client");
 			e.printStackTrace();
 		}
 	}
 
-	private void addSong(BBRequest request) {
-		controller.addSongToPlaylist(request.getArtist(), request.getTitle());
+	private boolean addSong(BBRequest request) {
+		return controller.addSongToPlaylist(request.getArtist(),
+				request.getTitle());
 	}
 }

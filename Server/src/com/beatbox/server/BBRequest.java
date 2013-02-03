@@ -6,7 +6,7 @@ import org.json.JSONObject;
 public class BBRequest {
 
 	public static enum Command {
-		GETLIBRARY, ADDSONG, INVALID
+		GETLIBRARY, ADDSONG, INVALID, QUIT
 	};
 
 	JSONObject request;
@@ -18,12 +18,15 @@ public class BBRequest {
 	public BBRequest(String input) {
 		try {
 			request = new JSONObject(input);
-			if (request.getString("command").equals("GETLIBRARY")) {
+			String inCommand = request.getString("command");
+			if (inCommand.equals("GETLIBRARY")) {
 				command = Command.GETLIBRARY;
-			} else if (request.getString("command").equals("ADDSONG")) {
+			} else if (inCommand.equals("ADDSONG")) {
 				command = Command.ADDSONG;
 				artist = request.getString("artist");
 				title = request.getString("title");
+			} else if (inCommand.equals("QUIT")) {
+				command = Command.QUIT;
 			} else {
 				command = Command.INVALID;
 			}
@@ -31,7 +34,6 @@ public class BBRequest {
 		} catch (JSONException e) {
 			isErrored = true;
 			System.err.println("Error parsing request");
-			e.printStackTrace();
 		}
 	}
 

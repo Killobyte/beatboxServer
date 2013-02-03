@@ -123,10 +123,15 @@ public class ServerController {
 		ui.addSongToPlaylist(song);
 	}
 
-	public synchronized void addSongToPlaylist(String artist, String title) {
+	public synchronized boolean addSongToPlaylist(String artist, String title) {
 		Song toAdd = library.getSong(artist, title);
-		playlist.add(toAdd);
-		ui.addSongToPlaylist(toAdd);
+		if (toAdd != null) {
+			playlist.add(toAdd);
+			ui.addSongToPlaylist(toAdd);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public synchronized void removeSongFromPlaylistAt(int index) {
