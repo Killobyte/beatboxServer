@@ -18,7 +18,7 @@ public class PlayButtonListener implements ActionListener {
 		if (controller.isPlaying()) {
 			controller.stopPlaying();
 			controller.getUI().setPlayButtonText("Play");
-		} else {
+		} else if (controller.hasSongs()) {
 			controller.startPlaying();
 			controller.getUI().setPlayButtonText("Stop");
 		}

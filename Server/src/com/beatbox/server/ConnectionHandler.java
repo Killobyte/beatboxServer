@@ -46,4 +46,8 @@ public class ConnectionHandler extends Thread {
 			}
 		}
 	}
+
+	public int getPort() {
+		return port;
+	}
 }

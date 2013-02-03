@@ -3,6 +3,8 @@ package com.beatbox.server.ui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
@@ -13,6 +15,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -40,11 +43,30 @@ public class ServerUI {
 		playPauseButton = new JButton("Play");
 		playPauseButton.addActionListener(new PlayButtonListener(controller));
 
-		JPanel controls = new JPanel();
-		controls.setLayout(new BoxLayout(controls, BoxLayout.LINE_AXIS));
-		controls.add(Box.createHorizontalGlue());
-		controls.add(playPauseButton);
-		controls.add(Box.createHorizontalGlue());
+		// Create lables for IP and Port
+		JLabel ipLabel = null;
+		try {
+			ipLabel = new JLabel("IP: "
+					+ InetAddress.getLocalHost().getHostAddress());
+		} catch (UnknownHostException e) {
+			System.err.println("Error get IP addr");
+			e.printStackTrace();
+		}
+		JLabel portLabel = new JLabel("Port: "
+				+ Integer.toString(controller.getServerPort()));
+
+		/*
+		 * JPanel networkPanel = new JPanel(); networkPanel .setLayout(new
+		 * BoxLayout(networkPanel, BoxLayout.PAGE_AXIS));
+		 * networkPanel.add(ipLabel); networkPanel.add(portLabel);
+		 */
+
+		JPanel header = new JPanel();
+		header.setLayout(new BoxLayout(header, BoxLayout.LINE_AXIS));
+		header.add(Box.createHorizontalGlue());
+		header.add(playPauseButton);
+		header.add(Box.createHorizontalGlue());
+		// header.add(networkPanel);
 
 		// Need this to set up environment to play MP3s
 		final JFXPanel fxPanel = new JFXPanel();
@@ -107,11 +129,22 @@ public class ServerUI {
 		browserPanel.add(createPanelSpacer());
 		browserPanel.add(playlistScroller);
 
+		// Footer
+		JPanel networkPanel = new JPanel();
+		networkPanel
+				.setLayout(new BoxLayout(networkPanel, BoxLayout.LINE_AXIS));
+		networkPanel.add(Box.createHorizontalGlue());
+		networkPanel.add(ipLabel);
+		networkPanel.add(createButtonSpacer());
+		networkPanel.add(portLabel);
+		networkPanel.add(Box.createHorizontalGlue());
+
 		mainFrame = new JFrame();
 		mainFrame.setTitle("BeatBox Home Jukebox");
-		mainFrame.add(controls, BorderLayout.PAGE_START);
+		mainFrame.add(header, BorderLayout.PAGE_START);
 		mainFrame.add(browserPanel, BorderLayout.CENTER);
-		mainFrame.add(fxPanel, BorderLayout.PAGE_END);
+		mainFrame.add(networkPanel, BorderLayout.PAGE_END);
+		mainFrame.add(fxPanel, BorderLayout.EAST);
 
 		mainFrame.pack();
 		mainFrame.setLocationRelativeTo(null);

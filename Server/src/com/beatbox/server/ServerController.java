@@ -25,7 +25,7 @@ public class ServerController {
 	boolean isPlaying = false;
 	private ArrayList<Song> playlist;
 	private BBMediaPlayer player;
-	private int playingIndex;
+	private volatile int playingIndex;
 	private ConnectionHandler connHandler;
 
 	public ServerController() {
@@ -59,7 +59,6 @@ public class ServerController {
 		if (config != null) {
 			try {
 				musicPath = config.getString("musicPath");
-				System.out.println("Read musicPath as " + musicPath);
 			} catch (JSONException e) {
 				System.err
 						.println("Error - musicPath missing from config file");
@@ -139,10 +138,11 @@ public class ServerController {
 		ui.removeSongFromPlaylist(index);
 		if (index == playingIndex) {
 			stopPlaying();
-			// Without this we would skip the song after the one currently
-			// playing
-			playingIndex--;
-			startPlaying();
+			if (playlist.size() == 0) {
+				ui.setPlayButtonText("Play");
+			} else {
+				startPlaying();
+			}
 		} else if (index < playingIndex) {
 			// Keep proper highlighting of current song
 			playingIndex--;
@@ -174,7 +174,8 @@ public class ServerController {
 
 	public synchronized Song getNextSong() {
 		if (playlist.size() != 0 && playingIndex < playlist.size()) {
-			return playlist.get(++playingIndex);
+			playingIndex++;
+			return playlist.get(playingIndex);
 		} else {
 			return null;
 		}
@@ -189,6 +190,14 @@ public class ServerController {
 		player.stopMedia();
 		// So when the user clicks "start" the same song starts over
 		playingIndex--;
+	}
+
+	public synchronized boolean hasSongs() {
+		return playlist.size() > 0;
+	}
+
+	public int getServerPort() {
+		return connHandler.getPort();
 	}
 
 	public static void main(String[] argv) {
